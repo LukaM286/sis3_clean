@@ -44,6 +44,35 @@ dataPool.creteNovica = (title, slug, text) => {
     })
   })
 }
+dataPool.creteUser = (realId, username, email, password) => {
+  return new Promise((resolve, reject) => {
+    
+    const randomId = Math.floor(Math.random() * 500) + 1;
+
+    
+    conn.query(
+      `INSERT INTO user_login (id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`,
+      [realId, username, email, password],
+      (err, res) => {
+        if (err) return reject(err);
+
+        
+        conn.query(
+          `INSERT INTO Uporabnik (id, ime, priimek, email, vloga_id) VALUES (?, ?, ?, ?, ?)`,
+          [randomId, username, password, email, 700],
+          (err2, res2) => {
+            if (err2) return reject(err2);
+
+            resolve({ user_login: res, uporabnik: res2 });
+          }
+        );
+      }
+    );
+  });
+};
+
+
+
 //DELETE FROM news WHERE id = 42;
 dataPool.deleteNovica = (id) => {
   return new Promise((resolve, reject) => {
