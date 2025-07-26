@@ -113,7 +113,7 @@ users.get('/list', async (req, res, next)=>{
     var email = req.body.email;
     var password = req.body.password;
 
-    var new_user = id && username && email && password;
+    //var new_user = id && username && email && password;
     
     
     if (req.session.logged_in == true) {
