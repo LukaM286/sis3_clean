@@ -36,6 +36,19 @@ dataPool.oneNovica = (id) => {
   })
 }
 
+dataPool.GetUserDetails = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(`SELECT vloga_id FROM Uporabnik WHERE id = ?`, [id], (err, res) => {
+      if (err) {
+        return reject(err);
+      }
+      return resolve(res);
+    });
+  });
+};
+
+
+
 dataPool.creteNovica = (title, slug, text) => {
   return new Promise((resolve, reject) => {
     conn.query(`INSERT INTO news_new (title,slug,text,author_email) VALUES (?,?,?,?)`, [title, slug, text, username], (err, res) => {

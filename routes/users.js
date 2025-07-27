@@ -34,54 +34,59 @@ users.get('/session', async (req, res, next)=>{
  })
  
 
-//Checks if user submitted both fields, if user exist and if the combination of user and password matches
 users.post('/login', async (req, res) => {
+  var username = req.body.username;
+  var password = req.body.password;
 
-    var username = req.body.username;
-    var password = req.body.password;
-    
-    if (username && password) {
-        try {
-            let queryResult = await DB.AuthUser(username);
+  if (username && password) {
+    try {
+      let queryResult = await DB.AuthUser(username);
 
-            if (queryResult.length > 0) {
-                if (password === queryResult[0].user_password) {
-                    console.log(queryResult)
-                    console.log("LOGIN OK");
-                    
-                    req.session.logged_in = true;
+      if (queryResult.length > 0) {
+        if (password === queryResult[0].user_password) {
+          console.log("LOGIN OK");
 
-                    //res.json(req.session.queryResult[0].user_email);
-                    
+          let id = queryResult[0].id;
+            
+            
+            console.log("user id from authUser:", id);
+        
+          let userDetails = await DB.GetUserDetails(id);
+          console.log("User ID from AuthUser:", id);
 
-                    
-                    
-                    res.json({ success: true, message: "LOGIN OK" });
-                    res.status(200)
-                }
-                else {
-                    console.log("INCORRECT PASSWORD");
-                    res.json({ success: false, message: "INCORRECT PASSWORD" });
-                    res.status(200)
-                }
-            } else {
-                console.log("USER NOT REGISTRED");
-                res.json({ success: false, message: "USER NOT REGISTRED" });
-                res.status(200)
-            }
+          if (userDetails.length > 0) {
+            let vloga_id = userDetails[0].vloga_id;
+            let role = 'pacient'; // default
+
+            if (vloga_id === 300) role = 'zdravnik';
+            else if (vloga_id === 900) role = 'admin';
+
+            req.session.logged_in = true;
+            req.session.user_id = id;
+            req.session.role = role;
+
+            res.status(200).json({ success: true, role: role, message: "LOGIN OK" });
+          } else {
+            res.status(404).json({ success: false, message: "User details not found" });
+          }
+        } else {
+          console.log("INCORRECT PASSWORD");
+          res.status(200).json({ success: false, message: "INCORRECT PASSWORD" });
         }
-        catch (err) {
-            console.log(err)
-            res.status(404)
-        }
+      } else {
+        console.log("USER NOT REGISTERED");
+        res.status(200).json({ success: false, message: "USER NOT REGISTERED" });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Server error" });
     }
-    else {
-        console.log("Please enter Username and Password!")
-        res.json({ success: false, message: "Please enter Username and Password!" });
-        res.status(204)
-    }
-    res.end();
+  } else {
+    console.log("Please enter Username and Password!");
+    res.status(400).json({ success: false, message: "Please enter Username and Password!" });
+  }
 });
+
 
 users.get('/list', async (req, res, next)=>{
     
@@ -113,7 +118,6 @@ users.get('/list', async (req, res, next)=>{
     var email = req.body.email;
     var password = req.body.password;
 
-    //var new_user = id && username && email && password;
     
     
     if (req.session.logged_in == true) {
@@ -146,7 +150,6 @@ users.get('/list', async (req, res, next)=>{
     res.end();
 });
 
-// Inserts a new user in our database
 
 
 module.exports = users
