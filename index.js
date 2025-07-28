@@ -13,6 +13,12 @@ const upload = require('./routes/upload')
 
 const session = require('express-session')
 
+
+
+//app.set('view engine', 'ejs');
+//app.set('views', path.join(__dirname, 'views'));
+
+
 app.set('trust proxy', 1) 
 app.use(session({
    secret: 'some secret',

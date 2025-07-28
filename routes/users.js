@@ -5,6 +5,13 @@ const DB = require('../db/dbConn.js')
 
 
 
+
+
+
+
+
+
+
 users.get('/session', async (req, res, next)=>{
     try{
         console.log("session data: ")
@@ -111,44 +118,39 @@ users.get('/list', async (req, res, next)=>{
   })
 
 
-  users.post('/new', async (req, res) => {
-    
+users.post('/new', async (req, res) => {
     var id = req.body.id;
     var username = req.body.username;
     var email = req.body.email;
     var password = req.body.password;
 
-    
-    
     if (req.session.logged_in == true) {
-                try {
-                    var queryResult = await DB.creteUser(id, username, email, password)
-                    if (queryResult.affectedRows) {
-                        console.log("New User Added!!")
-                    }
-                    console.log("News User Added")
-                }
-                catch (err) {
-                    console.log(err)
-                    res.sendStatus(500)
-                }
-    }
-    else {
+        try {
+            var queryResult = await DB.creteUser(id, username, email, password);
 
-        if(req.session.logged_in == false){
-            console.log("Please Login!")
-            res.json({ success: false, message: "Please Login" });
-            res.status(204)
+            if (queryResult.user_login?.affectedRows > 0 && queryResult.uporabnik?.affectedRows > 0) {
+                console.log("New User Added!!");
+                res.json({ success: true, message: "User added successfully" });
+            } else {
+                console.log("User not added.");
+                res.json({ success: false, message: "User not added." });
+            }
+        } catch (err) {
+            console.log(err);
+            res.sendStatus(500);
         }
-        if(!id || !username || !email || !password){
-            console.log("Please enter your ID, then users Username, Email and Password for new user!")
-            res.json({ success: false, message: "Please enter your ID, then users Username, Email and Password for new user!" });
-            res.status(204)
+    } else {
+        if (req.session.logged_in == false) {
+            console.log("Please Login!");
+            res.status(401).json({ success: false, message: "Please Login" });
+        } else if (!id || !username || !email || !password) {
+            console.log("Please enter your ID, then users Username, Email and Password for new user!");
+            res.status(400).json({ success: false, message: "Please enter your ID, then user's Username, Email and Password for new user!" });
         }
-        
     }
-    res.end();
 });
+
+
 
 
 
