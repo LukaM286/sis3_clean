@@ -7,6 +7,9 @@ const path = require('path')
 const port = process.env.PORT || 7555
 
 
+
+
+
 const novice = require('./routes/novice') 
 const users = require('./routes/users')
 const upload = require('./routes/upload')
@@ -32,7 +35,7 @@ app.use(express.urlencoded({extended : true}));
 
 
 app.use(cors({
-   origin: 'http://localhost:8080',
+   origin: 'http://localhost:3000',
    methods: ['GET', 'POST', 'PUT', 'OPTIONS', 'HEAD'],
    credentials: true
 }));
