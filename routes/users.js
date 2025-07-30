@@ -95,27 +95,23 @@ users.post('/login', async (req, res) => {
 });
 
 
-users.get('/list', async (req, res, next)=>{
-    
-    if (req.session.logged_in == true){
-            try{
-        var queryResult = await DB.allUsers();
-        console.log("All user")
-        res.json(queryResult)
+users.get('/list', async (req, res, next) => {
+  if (req.session.logged_in === true) {
+    try {
+      const queryResult = await DB.allUsers();
+      console.log("All users");
+      res.json({ success: true, users: queryResult }); 
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Napaka pri poizvedbi." });
+      next();
     }
-    catch(err){
-        console.log(err)
-        res.sendStatus(500)
-        next()
-    }
+  } else {
+    console.log("USER NOT REGISTERED");
+    res.status(401).json({ success: false, message: "USER NOT REGISTERED" });
+  }
+});
 
-    }        else {
-                console.log("USER NOT REGISTRED");
-                res.json({ success: false, message: "USER NOT REGISTRED" });
-                res.status(200)
-            }
-
-  })
 
 
 users.post('/new', async (req, res) => {

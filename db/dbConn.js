@@ -99,7 +99,7 @@ dataPool.deleteNovica = (id) => {
 
 dataPool.allUsers = () => {
   return new Promise((resolve, reject) => {
-    conn.query(`SELECT * From Uporabnik `, (err, res) => {
+    conn.query(`SELECT * From Uporabnik WHERE vloga_id = 700`, (err, res) => {
       if (err) { return reject(err) }
       return resolve(res)
     })
