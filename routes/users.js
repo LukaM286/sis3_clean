@@ -70,9 +70,19 @@ users.post('/login', async (req, res) => {
 
             req.session.logged_in = true;
             req.session.user_id = id;
+            req.session.vloga_id = vloga_id;
             req.session.role = role;
+            
 
-            res.status(200).json({ success: true, role: role, message: "LOGIN OK" });
+
+           res.status(200).json({
+            success: true,
+            role: role,
+            vloga_id: vloga_id,
+            id: id,  
+            message: "LOGIN OK"
+            });
+
           } else {
             res.status(404).json({ success: false, message: "User details not found" });
           }
@@ -123,6 +133,39 @@ users.get('/kartoni', async (req, res) => {
     }
   } else {
     res.status(401).json({ success: false, message: "Neavtoriziran dostop." });
+  }
+});
+
+users.post('/addObravnava', async (req, res) => {
+  const {
+    id,
+    karton_id,
+    tip_obravnave,
+    opis,
+    datum,
+    izvajalec_id,
+    pacient_id
+  } = req.body;
+
+  if (req.session.logged_in !== true || req.session.vloga_id !== 300) {
+    return res.status(403).json({ success: false, message: "Dostop zavrnjen." });
+  }
+
+  try {
+    await DB.addObravnava({
+      id,
+      karton_id,
+      tip_obravnave,
+      opis,
+      datum,
+      izvajalec_id,
+      pacient_id
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Napaka pri dodajanju obravnave." });
   }
 });
 

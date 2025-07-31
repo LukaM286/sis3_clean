@@ -109,6 +109,29 @@ dataPool.allUsers = () => {
   });
 };
 
+
+dataPool.addObravnava = ({
+  id,
+  karton_id,
+  tip_obravnave,
+  opis,
+  datum,
+  izvajalec_id,
+  pacient_id
+}) => {
+  return new Promise((resolve, reject) => {
+    const query = `
+      INSERT INTO Obravnava (id, karton_id, tip_obravnave, opis, datum, izvajalec_id, pacient_id)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `;
+    conn.query(query, [id, karton_id, tip_obravnave, opis, datum, izvajalec_id, pacient_id], (err, result) => {
+      if (err) return reject(err);
+      resolve(result);
+    });
+  });
+};
+
+
 dataPool.allKarton = () => {
   return new Promise((resolve, reject) => {
     conn.query(`SELECT * FROM Elektronski_karton`, (err, res) => {
