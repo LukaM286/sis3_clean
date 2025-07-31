@@ -99,12 +99,16 @@ dataPool.deleteNovica = (id) => {
 
 dataPool.allUsers = () => {
   return new Promise((resolve, reject) => {
-    conn.query(`SELECT * From Uporabnik WHERE vloga_id = 700`, (err, res) => {
-      if (err) { return reject(err) }
-      return resolve(res)
-    })
-  })
-}
+    conn.query(
+      `SELECT id, ime, priimek, email, vloga_id FROM Uporabnik WHERE vloga_id = 700`,
+      (err, res) => {
+        if (err) return reject(err);
+        return resolve(res);
+      }
+    );
+  });
+};
+
 
 dataPool.findUser = () => {
   return new Promise((resolve, reject) => {
