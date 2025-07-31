@@ -109,6 +109,15 @@ dataPool.allUsers = () => {
   });
 };
 
+dataPool.allKarton = () => {
+  return new Promise((resolve, reject) => {
+    conn.query(`SELECT * FROM Elektronski_karton`, (err, res) => {
+      if (err) return reject(err);
+      return resolve(res);
+    });
+  });
+};
+
 
 dataPool.findUser = () => {
   return new Promise((resolve, reject) => {

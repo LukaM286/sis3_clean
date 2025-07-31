@@ -112,6 +112,20 @@ users.get('/list', async (req, res, next) => {
   }
 });
 
+users.get('/kartoni', async (req, res) => {
+  if (req.session.logged_in === true) {
+    try {
+      const kartoni = await DB.allKarton();
+      res.json({ success: true, kartoni });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Napaka pri poizvedbi kartonov." });
+    }
+  } else {
+    res.status(401).json({ success: false, message: "Neavtoriziran dostop." });
+  }
+});
+
 
 
 users.post('/new', async (req, res) => {
