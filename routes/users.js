@@ -169,6 +169,20 @@ users.post('/addObravnava', async (req, res) => {
   }
 });
 
+users.get("/obravnava/:id", async (req, res) => {
+  const pacientId = req.params.id;
+
+  try {
+    const obravnave = await DB.obravnaveZaPacienta(pacientId);
+    res.json({ success: true, obravnave });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Napaka pri pridobivanju obravnav." });
+  }
+});
+
+
+
 
 
 users.post('/new', async (req, res) => {

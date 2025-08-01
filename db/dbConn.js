@@ -27,6 +27,20 @@ dataPool.allNovice = () => {
   })
 }
 
+dataPool.obravnaveZaPacienta = (pacientId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM Obravnava WHERE pacient_id = ?`,
+      [pacientId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }
+    );
+  });
+};
+
+
 dataPool.oneNovica = (id) => {
   return new Promise((resolve, reject) => {
     conn.query(`SELECT * FROM news WHERE id = ?`, id, (err, res) => {
