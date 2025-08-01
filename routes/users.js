@@ -218,6 +218,36 @@ users.post('/new', async (req, res) => {
 });
 
 
+users.get("/karton/:id", async (req, res) => {
+  const pacientId = req.params.id;
+
+  try {
+    const karton = await DB.getElektronskiKarton(pacientId);
+    if (!karton) {
+      return res.status(404).json({ success: false, message: "Karton ni najden." });
+    }
+
+    res.json({ success: true, karton });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Napaka pri pridobivanju kartona." });
+  }
+});
+
+users.post("/karton/:id", async (req, res) => {
+  const pacientId = req.params.id;
+  const { tezave, samomeritve, zdravila } = req.body;
+
+  try {
+    await DB.updateElektronskiKarton(pacientId, { tezave, samomeritve, zdravila });
+    res.json({ success: true, message: "Karton uspešno posodobljen." });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Napaka pri posodabljanju kartona." });
+  }
+});
+
+
 
 
 

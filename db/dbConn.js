@@ -40,6 +40,33 @@ dataPool.obravnaveZaPacienta = (pacientId) => {
   });
 };
 
+dataPool.getElektronskiKarton = (pacientId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM Elektronski_karton WHERE pacient_id = ?`,
+      [pacientId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result[0]); // vrne en karton
+      }
+    );
+  });
+};
+
+dataPool.updateElektronskiKarton = (pacientId, data) => {
+  const { tezave, samomeritve, zdravila } = data;
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `UPDATE Elektronski_karton SET tezave = ?, samomeritve = ?, zdravila = ? WHERE pacient_id = ?`,
+      [tezave, samomeritve, zdravila, pacientId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result);
+      }
+    );
+  });
+};
+
 
 dataPool.oneNovica = (id) => {
   return new Promise((resolve, reject) => {
