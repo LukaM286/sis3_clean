@@ -204,6 +204,17 @@ dataPool.AuthUser = (username) => {
 
 }
 
+dataPool.diagnozeZaObravnavo = (obravnavaId) => {
+  return new Promise((resolve, reject) => {
+    const query = "SELECT * FROM Diagnoza WHERE obravnava_id = ?";
+    conn.query(query, [obravnavaId], (err, results) => {
+      if (err) return reject(err);
+      resolve(results);
+    });
+  });
+};
+
+
 
 
 

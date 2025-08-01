@@ -248,6 +248,18 @@ users.post("/karton/:id", async (req, res) => {
 });
 
 
+users.get("/obravnava/:id/diagnoze", async (req, res) => {
+  const obravnavaId = req.params.id;
+
+  try {
+    const diagnoze = await DB.diagnozeZaObravnavo(obravnavaId);
+    res.json({ success: true, diagnoze });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Napaka pri pridobivanju diagnoz." });
+  }
+});
+
 
 
 
