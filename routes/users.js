@@ -262,5 +262,24 @@ users.get("/obravnava/:id/diagnoze", async (req, res) => {
 
 
 
+users.get('/poziv', async (req, res) => {
+  if (req.session.logged_in === true && req.session.role === 'pacient') {
+    try {
+      const pacientId = req.session.user_id;
+
+      const pozivi = await DB.getPoziviZaPacienta(pacientId); 
+
+      res.json({ success: true, pozivi });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Napaka pri pridobivanju pozivov." });
+    }
+  } else {
+    res.status(403).json({ success: false, message: "Dostop zavrnjen." });
+  }
+});
+
+
+
 
 module.exports = users

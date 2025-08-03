@@ -214,8 +214,27 @@ dataPool.diagnozeZaObravnavo = (obravnavaId) => {
   });
 };
 
-
-
+/*
+async function getPoziviZaPacienta(prejemnikId) {
+  const [rows] = await connection.query(
+    "SELECT * FROM Poziv WHERE prejemnik_id = ?",
+    [prejemnikId]
+  );
+  return rows;
+}
+*/
+dataPool.getPoziviZaPacienta = (pacientId) => {
+  return new Promise((resolve, reject) => {
+    conn.query(
+      `SELECT * FROM Poziv WHERE prejemnik_id = ?`,
+      [pacientId],
+      (err, result) => {
+        if (err) return reject(err);
+        resolve(result); 
+      }
+    );
+  });
+};
 
 
 module.exports = dataPool;
