@@ -101,7 +101,7 @@ dataPool.getAllObravnave = () => {
 
 
 
-dataPool.creteCKZdosezki = (id, obravnava_id, cilji_dosezeni, opombe ) => {
+dataPool.creteCKZdosezki = (id, obravnava_id, cilji_dosezeni, opombe) => {
   return new Promise((resolve, reject) => {
     conn.query(`INSERT INTO CKZ_dosezki (id,obravnava_id,cilji_dosezeni,opombe) VALUES (?,?,?,?)`, [id, obravnava_id, cilji_dosezeni, opombe], (err, res) => {
       if (err) { return reject(err) }
@@ -116,17 +116,17 @@ dataPool.creteCKZdosezki = (id, obravnava_id, cilji_dosezeni, opombe ) => {
 
 dataPool.creteUser = (realId, username, email, password) => {
   return new Promise((resolve, reject) => {
-    
+
     const randomId = Math.floor(Math.random() * 500) + 1;
 
-    
+
     conn.query(
       `INSERT INTO user_login (id, user_name, user_email, user_password) VALUES (?, ?, ?, ?)`,
       [realId, username, email, password],
       (err, res) => {
         if (err) return reject(err);
 
-        
+
         conn.query(
           `INSERT INTO Uporabnik (id, ime, priimek, email, vloga_id) VALUES (?, ?, ?, ?, ?)`,
           [randomId, username, password, email, 700],
@@ -256,7 +256,7 @@ dataPool.getPoziviZaPacienta = (pacientId) => {
       [pacientId],
       (err, result) => {
         if (err) return reject(err);
-        resolve(result); 
+        resolve(result);
       }
     );
   });

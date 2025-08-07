@@ -12,34 +12,34 @@ const DB = require('../db/dbConn.js')
 
 
 
-users.get('/session', async (req, res, next)=>{
-    try{
-        console.log("session data: ")
-        console.log(req.session)
-        res.json(req.session);
-    }
-    catch(err){
-        console.log(err)
-        res.sendStatus(500)
-        next()
-    }
-  })
+users.get('/session', async (req, res, next) => {
+  try {
+    console.log("session data: ")
+    console.log(req.session)
+    res.json(req.session);
+  }
+  catch (err) {
+    console.log(err)
+    res.sendStatus(500)
+    next()
+  }
+})
 
-  users.get('/logout', async (req,res, next)=>{
-    try{
-        req.session.destroy(function(err) {
-            res.json({status:{success: true, msg: err}})
-        })
-       
-    }
-    catch(err){
-        console.log(err)
-        res.json({status:{success: false, msg: err}})
-        res.sendStatus(500)
-        next()
-    }
- })
- 
+users.get('/logout', async (req, res, next) => {
+  try {
+    req.session.destroy(function (err) {
+      res.json({ status: { success: true, msg: err } })
+    })
+
+  }
+  catch (err) {
+    console.log(err)
+    res.json({ status: { success: false, msg: err } })
+    res.sendStatus(500)
+    next()
+  }
+})
+
 
 users.post('/login', async (req, res) => {
   var username = req.body.username;
@@ -54,10 +54,10 @@ users.post('/login', async (req, res) => {
           console.log("LOGIN OK");
 
           let id = queryResult[0].id;
-            
-            
-            console.log("user id from authUser:", id);
-        
+
+
+          console.log("user id from authUser:", id);
+
           let userDetails = await DB.GetUserDetails(id);
           console.log("User ID from AuthUser:", id);
 
@@ -66,24 +66,24 @@ users.post('/login', async (req, res) => {
             let role = 'pacient'; // default
 
             if (vloga_id === 300) role = 'zdravnik';
-            if(vloga_id === 800) role = 'CKZ';
-            if(vloga_id === 200) role = 'med-sestra';
+            if (vloga_id === 800) role = 'CKZ';
+            if (vloga_id === 200) role = 'med-sestra';
             else if (vloga_id === 900) role = 'admin';
-            
+
 
             req.session.logged_in = true;
             req.session.user_id = id;
             req.session.vloga_id = vloga_id;
             req.session.role = role;
-            
 
 
-           res.status(200).json({
-            success: true,
-            role: role,
-            vloga_id: vloga_id,
-            id: id,  
-            message: "LOGIN OK"
+
+            res.status(200).json({
+              success: true,
+              role: role,
+              vloga_id: vloga_id,
+              id: id,
+              message: "LOGIN OK"
             });
 
           } else {
@@ -113,7 +113,7 @@ users.get('/list', async (req, res, next) => {
     try {
       const queryResult = await DB.allUsers();
       console.log("All users");
-      res.json({ success: true, users: queryResult }); 
+      res.json({ success: true, users: queryResult });
     } catch (err) {
       console.log(err);
       res.status(500).json({ success: false, message: "Napaka pri poizvedbi." });
@@ -141,14 +141,14 @@ users.get('/kartoni', async (req, res) => {
 
 users.post('/kartoni/delete', async (req, res) => {
   if (req.session.logged_in === true) {
-    const { id } = req.body; 
+    const { id } = req.body;
 
     if (!id) {
       return res.status(400).json({ success: false, message: "ID kartona ni podan." });
     }
 
     try {
-      await DB.deleteKartonById(id); 
+      await DB.deleteKartonById(id);
       res.json({ success: true, message: "Karton uspešno izbrisan." });
     } catch (err) {
       console.error(err);
@@ -225,35 +225,35 @@ users.get('/obravnave', async (req, res) => {
 
 
 users.post('/new', async (req, res) => {
-    var id = req.body.id;
-    var username = req.body.username;
-    var email = req.body.email;
-    var password = req.body.password;
+  var id = req.body.id;
+  var username = req.body.username;
+  var email = req.body.email;
+  var password = req.body.password;
 
-    if (req.session.logged_in == true) {
-        try {
-            var queryResult = await DB.creteUser(id, username, email, password);
+  if (req.session.logged_in == true) {
+    try {
+      var queryResult = await DB.creteUser(id, username, email, password);
 
-            if (queryResult.user_login?.affectedRows > 0 && queryResult.uporabnik?.affectedRows > 0) {
-                console.log("New User Added!!");
-                res.json({ success: true, message: "User added successfully" });
-            } else {
-                console.log("User not added.");
-                res.json({ success: false, message: "User not added." });
-            }
-        } catch (err) {
-            console.log(err);
-            res.sendStatus(500);
-        }
-    } else {
-        if (req.session.logged_in == false) {
-            console.log("Please Login!");
-            res.status(401).json({ success: false, message: "Please Login" });
-        } else if (!id || !username || !email || !password) {
-            console.log("Please enter your ID, then users Username, Email and Password for new user!");
-            res.status(400).json({ success: false, message: "Please enter your ID, then user's Username, Email and Password for new user!" });
-        }
+      if (queryResult.user_login?.affectedRows > 0 && queryResult.uporabnik?.affectedRows > 0) {
+        console.log("New User Added!!");
+        res.json({ success: true, message: "User added successfully" });
+      } else {
+        console.log("User not added.");
+        res.json({ success: false, message: "User not added." });
+      }
+    } catch (err) {
+      console.log(err);
+      res.sendStatus(500);
     }
+  } else {
+    if (req.session.logged_in == false) {
+      console.log("Please Login!");
+      res.status(401).json({ success: false, message: "Please Login" });
+    } else if (!id || !username || !email || !password) {
+      console.log("Please enter your ID, then users Username, Email and Password for new user!");
+      res.status(400).json({ success: false, message: "Please enter your ID, then user's Username, Email and Password for new user!" });
+    }
+  }
 });
 
 users.post('/new/dosezek', async (req, res) => {
@@ -330,7 +330,7 @@ users.get('/poziv', async (req, res) => {
     try {
       const pacientId = req.session.user_id;
 
-      const pozivi = await DB.getPoziviZaPacienta(pacientId); 
+      const pozivi = await DB.getPoziviZaPacienta(pacientId);
 
       res.json({ success: true, pozivi });
     } catch (err) {
