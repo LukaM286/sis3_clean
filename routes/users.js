@@ -136,6 +136,27 @@ users.get('/kartoni', async (req, res) => {
   }
 });
 
+users.post('/kartoni/delete', async (req, res) => {
+  if (req.session.logged_in === true) {
+    const { id } = req.body; 
+
+    if (!id) {
+      return res.status(400).json({ success: false, message: "ID kartona ni podan." });
+    }
+
+    try {
+      await DB.deleteKartonById(id); 
+      res.json({ success: true, message: "Karton uspešno izbrisan." });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ success: false, message: "Napaka pri brisanju kartona." });
+    }
+  } else {
+    res.status(401).json({ success: false, message: "Neavtoriziran dostop." });
+  }
+});
+
+
 users.post('/addObravnava', async (req, res) => {
   const {
     id,

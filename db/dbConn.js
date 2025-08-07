@@ -182,6 +182,16 @@ dataPool.allKarton = () => {
   });
 };
 
+dataPool.deleteKartonById = (id) => {
+  return new Promise((resolve, reject) => {
+    conn.query(`DELETE FROM Elektronski_karton WHERE id = ?`, [id], (err, res) => {
+      if (err) return reject(err);
+      resolve(res);
+    });
+  });
+};
+
+
 
 dataPool.findUser = () => {
   return new Promise((resolve, reject) => {
