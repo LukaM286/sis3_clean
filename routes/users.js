@@ -159,6 +159,9 @@ users.post('/kartoni/delete', async (req, res) => {
 });
 
 
+
+
+
 users.post('/addObravnava', async (req, res) => {
   const {
     id,
@@ -203,6 +206,18 @@ users.get("/obravnava/:id", async (req, res) => {
     res.status(500).json({ success: false, message: "Napaka pri pridobivanju obravnav." });
   }
 });
+
+users.get('/obravnave', async (req, res) => {
+
+  try {
+    const obravnave = await DB.getAllObravnave();
+    res.json({ success: true, obravnave });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
 
 
 
