@@ -240,6 +240,30 @@ users.post('/new', async (req, res) => {
     }
 });
 
+users.post('/new/dosezek', async (req, res) => {
+  const { id, obravnava_id, cilji_dosezeni, opombe } = req.body;
+
+  console.log("Prejeli podatki:", req.body);
+
+
+  try {
+    const queryResult = await DB.creteCKZdosezki(id, obravnava_id, cilji_dosezeni, opombe);
+
+    if (queryResult.affectedRows > 0) {
+      console.log("New CKZ dosežki added!");
+      res.json({ success: true, message: "CKZ dosežki added successfully" });
+    } else {
+      console.log("CKZ dosežki not added.");
+      res.status(500).json({ success: false, message: "Failed to add CKZ dosežki" });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+});
+
+
+
 
 users.get("/karton/:id", async (req, res) => {
   const pacientId = req.params.id;

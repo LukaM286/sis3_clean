@@ -90,14 +90,17 @@ dataPool.GetUserDetails = (id) => {
 
 
 
-dataPool.creteNovica = (title, slug, text) => {
+dataPool.creteCKZdosezki = (id, obravnava_id, cilji_dosezeni, opombe ) => {
   return new Promise((resolve, reject) => {
-    conn.query(`INSERT INTO news_new (title,slug,text,author_email) VALUES (?,?,?,?)`, [title, slug, text, username], (err, res) => {
+    conn.query(`INSERT INTO CKZ_dosezki (id,obravnava_id,cilji_dosezeni,opombe) VALUES (?,?,?,?)`, [id, obravnava_id, cilji_dosezeni, opombe], (err, res) => {
       if (err) { return reject(err) }
       return resolve(res)
     })
   })
 }
+
+
+
 dataPool.creteUser = (realId, username, email, password) => {
   return new Promise((resolve, reject) => {
     
