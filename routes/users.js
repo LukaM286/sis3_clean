@@ -67,6 +67,7 @@ users.post('/login', async (req, res) => {
 
             if (vloga_id === 300) role = 'zdravnik';
             if(vloga_id === 800) role = 'CKZ';
+            if(vloga_id === 200) role = 'med-sestra';
             else if (vloga_id === 900) role = 'admin';
             
 
