@@ -66,7 +66,9 @@ users.post('/login', async (req, res) => {
             let role = 'pacient'; // default
 
             if (vloga_id === 300) role = 'zdravnik';
+            if(vloga_id === 800) role = 'CKZ';
             else if (vloga_id === 900) role = 'admin';
+            
 
             req.session.logged_in = true;
             req.session.user_id = id;
